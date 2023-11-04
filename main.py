@@ -38,31 +38,52 @@ def peliculasDiarias(urlDiarias,fechaActual):
 
     return listaPelis
 
+def proximosEstrenos(urlProxEstrenos,ordenarPor):
+    # lista de pelis para despues ordenarlas
+    listaPelis = []
+    # Solicitud a la pagina y soup
+    result = requests.get(urlDiarias)
+    soup = bs4.BeautifulSoup(result.text, 'lxml')
+
+    return listaPelis
 
 #Menu app:
 fecha = datetime.date.today()
 fechaActual = fecha.strftime('%d de %m de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
+urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
 salir = False
+
+#listas
+listaPelisDiarias = []
+listaProxEstrenos = []
 while not salir:
     imprimirMenu()
     opcionString = input("Elige una opcion: ")
     opcion = int(opcionString)
     if opcion == 1:
         print(f"Peliculas a {fechaActual}")
-        pelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
+        listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
         # Si la lista esta vacia no hay pelis nuevas
-        if not pelisDiarias:
+        if not listaPelisDiarias:
             print("Hoy no hay ninguna película nueva")
         else:
-            for a in pelisDiarias:
+            for a in listaPelisDiarias:
                 print(f"Titulo: {a.get_titulo()}, Puntuación: {a.get_puntuacion()}")
 
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
 
     elif opcion == 2:
-        print("Opcion 2")
+
+        ordenar =input("Como quieres ordenar las peliculas? (por fecha: 0, por género: 1")
+        ordenarNumber = int(ordenar)
+        if ordenarNumber != 0 and ordenarNumber != 1:
+            print("La opcion de ordenar que has elegido no es correcta")
+        else:
+            listaProxEstrenos = proximosEstrenos(urlProxEstrenos,ordenar)
+            # for a in listaProxEstrenos:
+            #     print(f"Titulo: {a.get_titulo()}, Fecha: {a.get_puntuacion}")
 
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
