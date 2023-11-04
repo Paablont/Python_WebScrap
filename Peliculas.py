@@ -7,11 +7,6 @@ class Pelicula:
         self._director = director
         self._reparto = reparto
 
-
-    def __init__(self, titulo,puntuacion):
-        self._titulo = titulo
-        self._puntuacion = puntuacion
-
     # Getters
     def get_titulo(self):
         return self._titulo

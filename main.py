@@ -42,26 +42,21 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
     # lista de pelis para despues ordenarlas
     listaPelis = []
     # Solicitud a la pagina y soup
-    result = requests.get(urlDiarias)
+    result = requests.get(urlProxEstrenos)
     soup = bs4.BeautifulSoup(result.text, 'lxml')
     # Saco las pelis de la pagina
     peliculas = soup.select('#main-wrapper-rdcat')
     for a in peliculas:
         #Saco el titulo
-        titulos = a.select_one('.top-movie .movie-card .mc-right h3 a').text
-        fechasEstrenos = a.select_one('.rdate-cat i').text
+        titulo = a.select_one('.top-movie .movie-card .mc-right h3 a').text
+        fechaEstreno = a.select_one('.rdate-cat i').text
         genero = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .genre').text
         sinopsis = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .synop-text').text
         director = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
         reparto = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .cast .credits .nb a').text
 
-
-
-
-
-        # print(titulos,fechasEstrenos)
-
-
+        peli = Pelicula(titulo,fechaEstreno,genero,sinopsis,director,reparto)
+        listaPelis.append(peli)
 
     return listaPelis
 
@@ -107,7 +102,14 @@ while not salir:
                 print("Esta vacia")
             else:
                 for a in listaProxEstrenos:
+                    print("---------------------------------------")
+                    print(f"Titulo: {a.get_titulo()}")
                     print(f"Fecha: {a.get_fecha_lanzamiento()}")
+                    print(f"Genero: {a.get_genero()}")
+                    print(f"Sinopsis: {a.get_sinopsis()}")
+                    print(f"Director: {a.get_director()}")
+                    print(f"Reparto: {a.get_reparto()}")
+                    print("---------------------------------------")
 
 
         input("Pulsa una tecla para volver al menu")
