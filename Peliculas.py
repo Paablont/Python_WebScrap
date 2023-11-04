@@ -6,8 +6,7 @@ class Pelicula:
         self._sinopsis = sinopsis
         self._director = director
         self._reparto = reparto
-    def __init__(self, fecha):
-        self._fecha_lanzamiento = fecha
+
 
     def __init__(self, titulo,puntuacion):
         self._titulo = titulo

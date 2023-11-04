@@ -44,6 +44,24 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
     # Solicitud a la pagina y soup
     result = requests.get(urlDiarias)
     soup = bs4.BeautifulSoup(result.text, 'lxml')
+    # Saco las pelis de la pagina
+    peliculas = soup.select('#main-wrapper-rdcat')
+    for a in peliculas:
+        #Saco el titulo
+        titulos = a.select_one('.top-movie .movie-card .mc-right h3 a').text
+        fechasEstrenos = a.select_one('.rdate-cat i').text
+        genero = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .genre').text
+        sinopsis = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .synop-text').text
+        director = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
+        reparto = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .cast .credits .nb a').text
+
+
+
+
+
+        # print(titulos,fechasEstrenos)
+
+
 
     return listaPelis
 
@@ -57,11 +75,14 @@ salir = False
 #listas
 listaPelisDiarias = []
 listaProxEstrenos = []
+
 while not salir:
     imprimirMenu()
     opcionString = input("Elige una opcion: ")
     opcion = int(opcionString)
+
     if opcion == 1:
+
         print(f"Peliculas a {fechaActual}")
         listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
         # Si la lista esta vacia no hay pelis nuevas
@@ -76,14 +97,18 @@ while not salir:
 
     elif opcion == 2:
 
-        ordenar =input("Como quieres ordenar las peliculas? (por fecha: 0, por género: 1")
+        ordenar =input("Como quieres ordenar las peliculas? (por fecha: 0, por género: 1): ")
         ordenarNumber = int(ordenar)
         if ordenarNumber != 0 and ordenarNumber != 1:
             print("La opcion de ordenar que has elegido no es correcta")
         else:
-            listaProxEstrenos = proximosEstrenos(urlProxEstrenos,ordenar)
-            # for a in listaProxEstrenos:
-            #     print(f"Titulo: {a.get_titulo()}, Fecha: {a.get_puntuacion}")
+            listaProxEstrenos = proximosEstrenos(urlProxEstrenos,ordenarNumber)
+            if not listaProxEstrenos:
+                print("Esta vacia")
+            else:
+                for a in listaProxEstrenos:
+                    print(f"Fecha: {a.get_fecha_lanzamiento()}")
+
 
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
