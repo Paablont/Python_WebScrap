@@ -5,6 +5,7 @@ import datetime
 import sys
 import os
 
+
 def imprimirMenu():
     print("******************************")
     print("1. Peliculas diarias")
@@ -13,30 +14,32 @@ def imprimirMenu():
     print("4. Salir de la aplicación")
     print("******************************")
 
-def peliculasDiarias(urlDiarias,fechaActual):
-    #lista de pelis para despues ordenarlas
-    listaPelis = []
-    #Solicitud a la pagina y soup
-    result = requests.get(urlDiarias)
-    soup = bs4.BeautifulSoup(result.text,'lxml')
-    #Saco la fecha de las pelis (para despues compararla con la actual)
-    fechaPelis = soup.find('div',class_='rdate-cat rdate-cat-first').text.strip()
 
-    #Comprobamos fechas
-    if(fechaPelis == fechaActual):
+def peliculasDiarias(urlDiarias, fechaActual):
+    # lista de pelis para despues ordenarlas
+    listaPelis = []
+    # Solicitud a la pagina y soup
+    result = requests.get(urlDiarias)
+    soup = bs4.BeautifulSoup(result.text, 'lxml')
+    # Saco la fecha de las pelis (para despues compararla con la actual)
+    fechaPelis = soup.find('div', class_='rdate-cat rdate-cat-first').text.strip()
+
+    # Comprobamos fechas
+    if (fechaPelis == fechaActual):
 
         tituloPeli = soup.select('.movie-card .mc-right')
         for a in tituloPeli:
-            #saco el titulo
+            # saco el titulo
             titulo = a.select_one('h3 a').text
-            #saco la puntuacion (la paso a float porque si no no la puedo ordenar)
+            # saco la puntuacion (la paso a float porque si no no la puedo ordenar)
             puntuacion = a.select_one('.mc-right-content .stats .avg-rating').text
             if puntuacion != '--':
-                puntuacionNumber = float(puntuacion.replace(",","."))
+                puntuacionNumber = float(puntuacion.replace(",", "."))
                 peli = Pelicula(titulo, puntuacionNumber)
                 listaPelis.append(peli)
 
     return listaPelis
+
 
 def proximosEstrenos(urlProxEstrenos,ordenarPor):
     # lista de pelis para despues ordenarlas
@@ -47,27 +50,33 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
     # Saco las pelis de la pagina
     peliculas = soup.select('#main-wrapper-rdcat')
     for a in peliculas:
-        #Saco el titulo
+        # Saco el titulo
         titulo = a.select_one('.top-movie .movie-card .mc-right h3 a').text
-        fechaEstreno = a.select_one('.rdate-cat i').text
+        fechaEstreno = a.select_one('.rdate-cat').text
         genero = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .genre').text
         sinopsis = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .synop-text').text
-        director = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
+        director = a.select_one(
+            '.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
         reparto = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .cast .credits .nb a').text
 
-        peli = Pelicula(titulo,fechaEstreno,genero,sinopsis,director,reparto)
+        peli = Pelicula(titulo, fechaEstreno, genero, sinopsis, director, reparto)
         listaPelis.append(peli)
+    if ordenarPor == 1: #Ordena segun genero
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_genero())
+    else:#Ordena segun fecha
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_fecha_lanzamiento(),reverse=True)
 
     return listaPelis
 
-#Menu app:
+
+# Menu app:
 fecha = datetime.date.today()
 fechaActual = fecha.strftime('%d de %m de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
 salir = False
 
-#listas
+# listas
 listaPelisDiarias = []
 listaProxEstrenos = []
 
@@ -92,7 +101,7 @@ while not salir:
 
     elif opcion == 2:
 
-        ordenar =input("Como quieres ordenar las peliculas? (por fecha: 0, por género: 1): ")
+        ordenar = input("Como quieres ordenar las peliculas? (por fecha: 0, por género: 1): ")
         ordenarNumber = int(ordenar)
         if ordenarNumber != 0 and ordenarNumber != 1:
             print("La opcion de ordenar que has elegido no es correcta")
@@ -111,7 +120,6 @@ while not salir:
                     print(f"Reparto: {a.get_reparto()}")
                     print("---------------------------------------")
 
-
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
     elif opcion == 3:
@@ -124,7 +132,3 @@ while not salir:
         sys.exit()
     else:
         print("Opcion invalida")
-
-
-
-
