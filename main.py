@@ -35,6 +35,7 @@ def peliculasDiarias(urlDiarias,fechaActual):
                 puntuacionNumber = float(puntuacion.replace(",","."))
                 peli = Pelicula(titulo, puntuacionNumber)
                 listaPelis.append(peli)
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_puntuacion())
 
     return listaPelis
 
