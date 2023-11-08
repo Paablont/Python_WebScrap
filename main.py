@@ -35,7 +35,8 @@ def peliculasDiarias(urlDiarias, fechaActual):
             puntuacion = a.select_one('.mc-right-content .stats .avg-rating').text
             if puntuacion != '--':
                 puntuacionNumber = float(puntuacion.replace(",", "."))
-                peli = Pelicula(titulo, puntuacionNumber)
+                peli = Pelicula(titulo)
+                peli.set_puntuacion(puntuacionNumber)
                 listaPelis.append(peli)
         listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_puntuacion())
 
@@ -56,11 +57,16 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
         fechaEstreno = a.select_one('.rdate-cat').text
         genero = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .genre').text
         sinopsis = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .synop .synop-text').text
-        director = a.select_one(
-            '.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
+        director = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .director .credits .nb a').text
         reparto = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .cast .credits .nb a').text
 
-        peli = Pelicula(titulo, fechaEstreno, genero, sinopsis, director, reparto)
+        peli = Pelicula(titulo)
+        peli.set_fecha_lanzamiento(fechaEstreno)
+        peli.set_genero(genero)
+        peli.set_sinopsis(sinopsis)
+        peli.set_director(director)
+        peli.set_reparto(reparto)
+
         listaPelis.append(peli)
     if ordenarPor == 1: #Ordena segun genero
         listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_genero())
@@ -69,17 +75,39 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
 
     return listaPelis
 
+def rankingPeliculas(urlRanking):
+    # lista de pelis para despues ordenarlas
+    listaRanking = []
+    # Solicitud a la pagina y soup
+    result = requests.get(urlRanking)
+    soup = bs4.BeautifulSoup(result.text, 'lxml')
+    # Saco las pelis de la pagina
+    rankingPelis = soup.select('.z-top-movies ul')
+    for a in rankingPelis:
+        # Saco el titulo
+        titulo = a.select_one('li .content .movie-card .mc-info-container .mc-title a').text
+        puntuacion = a.select_one('.data .avg-rating').text
+        if puntuacion != '--':
+            puntuacionNumber = float(puntuacion.replace(",", "."))
 
+        peli = Pelicula(titulo)
+        peli.set_puntuacion(puntuacionNumber)
+
+        listaRanking.append(peli)
+
+    return listaRanking
 # Menu app:
 fecha = datetime.date.today()
 fechaActual = fecha.strftime('%d de %m de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
+urlRanking = "https://www.filmaffinity.com/es/ranking.php?rn=ranking_2023_topmovies"
 salir = False
 
 # listas
 listaPelisDiarias = []
 listaProxEstrenos = []
+listaRanking = []
 
 while not salir:
     imprimirMenu()
@@ -124,7 +152,12 @@ while not salir:
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
     elif opcion == 3:
-        print("Opcion 3")
+        listaRanking = rankingPeliculas(urlRanking)
+        for a in listaRanking:
+            print("---------------------------------------")
+            print(f"Titulo: {a.get_titulo()}")
+            print(f"Puntuación: {a.get_puntuacion()}")
+            print("---------------------------------------")
 
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
