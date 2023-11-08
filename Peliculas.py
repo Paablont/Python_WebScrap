@@ -1,15 +1,11 @@
 class Pelicula:
-    def __init__(self, titulo, fecha_lanzamiento, genero, sinopsis, director, reparto, puntuacion):
+    def __init__(self, titulo, fecha_lanzamiento, genero, sinopsis, director, reparto):
         self._titulo = titulo
         self._fecha_lanzamiento = fecha_lanzamiento
         self._genero = genero
         self._sinopsis = sinopsis
         self._director = director
         self._reparto = reparto
-        self._puntuacion = puntuacion
-    def __init__(self, titulo,puntuacion):
-        self._titulo = titulo
-        self._puntuacion = puntuacion
 
     # Getters
     def get_titulo(self):
