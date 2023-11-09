@@ -4,7 +4,10 @@ import requests
 import datetime
 import sys
 import os
+import json
 
+def imprimirOpcionJSON():
+    print("Que quieres hacer con los datos? (1. Mostrarlos en consola, 0. Guardarlos en un JSON)")
 
 def imprimirMenu():
     print("******************************")
@@ -102,12 +105,14 @@ fechaActual = fecha.strftime('%d de %m de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
 urlRanking = "https://www.filmaffinity.com/es/ranking.php?rn=ranking_2023_topmovies"
+
 salir = False
 
 # listas
 listaPelisDiarias = []
 listaProxEstrenos = []
 listaRanking = []
+
 
 while not salir:
     imprimirMenu()
@@ -122,9 +127,24 @@ while not salir:
         if not listaPelisDiarias:
             print("Hoy no hay ninguna película nueva")
         else:
-            for a in listaPelisDiarias:
-                print(f"Titulo: {a.get_titulo()}, Puntuación: {a.get_puntuacion()}")
+            imprimirOpcionJSON()
+            opcionJsonString = input("Elige una opción: ")
+            opcionJson = int(opcionJsonString)
 
+            if opcionJson == 1:
+                for a in listaRanking:
+                    print("---------------------------------------")
+                    print(f"Titulo: {a.get_titulo()}")
+                    print(f"Puntuación: {a.get_puntuacion()}")
+                    print("---------------------------------------")
+            else:
+                fichero = open("pelisDiarias.json", "a")
+                for a in listaPelisDiarias:
+                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+                    json.dump(peli, fichero)
+                    fichero.write('\n')
+                fichero.close()
+                print("Datos guardados en pelisDiarias.json")
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
 
@@ -139,26 +159,57 @@ while not salir:
             if not listaProxEstrenos:
                 print("Esta vacia")
             else:
-                for a in listaProxEstrenos:
-                    print("---------------------------------------")
-                    print(f"Titulo: {a.get_titulo()}")
-                    print(f"Fecha: {a.get_fecha_lanzamiento()}")
-                    print(f"Genero: {a.get_genero()}")
-                    print(f"Sinopsis: {a.get_sinopsis()}")
-                    print(f"Director: {a.get_director()}")
-                    print(f"Reparto: {a.get_reparto()}")
-                    print("---------------------------------------")
+                imprimirOpcionJSON()
+                opcionJsonString = input("Elige una opción: ")
+                opcionJson = int(opcionJsonString)
+                if opcionJson == 1:
+                    for a in listaProxEstrenos:
+                        print("---------------------------------------")
+                        print(f"Titulo: {a.get_titulo()}")
+                        print(f"Fecha: {a.get_fecha_lanzamiento()}")
+                        print(f"Genero: {a.get_genero()}")
+                        print(f"Sinopsis: {a.get_sinopsis()}")
+                        print(f"Director: {a.get_director()}")
+                        print(f"Reparto: {a.get_reparto()}")
+                        print("---------------------------------------")
+                else:
 
+                    fichero = open("proximosEstrenos.json", "a")
+                    for a in listaProxEstrenos:
+                        peli = {"Titulo": a.get_titulo(),
+                                "Fecha": a.get_fecha_lanzamiento(),
+                                "Genero":a.get_genero(),
+                                "Sinopsis": a.get_sinopsis(),
+                                "Director:":a.get_director(),
+                                "Reparto":a.get_reparto()}
+                        json.dump(peli, fichero)
+                        fichero.write('\n')
+                    fichero.close()
+                    print("Datos guardados en proximosEstrenos.json")
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
     elif opcion == 3:
         listaRanking = rankingPeliculas(urlRanking)
-        for a in listaRanking:
-            print("---------------------------------------")
-            print(f"Titulo: {a.get_titulo()}")
-            print(f"Puntuación: {a.get_puntuacion()}")
-            print("---------------------------------------")
-
+        if not listaRanking:
+            print("Esta vacia")
+        else:
+            imprimirOpcionJSON()
+            opcionJsonString = input("Elige una opción: ")
+            opcionJson = int(opcionJsonString)
+            if opcionJson == 1:
+                for a in listaRanking:
+                    print("---------------------------------------")
+                    print(f"Titulo: {a.get_titulo()}")
+                    print(f"Puntuación: {a.get_puntuacion()}")
+                    print("---------------------------------------")
+            else:
+                fichero = open("rankingAnual.json", "a")
+                for a in listaRanking:
+                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+                    json.dump(peli, fichero)
+                    fichero.write('\n')
+                fichero.close()
+                print("Datos guardados en rankingAnual.json")
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
     elif opcion == 4:
