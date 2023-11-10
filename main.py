@@ -39,9 +39,9 @@ def peliculasDiarias(urlDiarias, fechaActual):
             if puntuacion != '--':
                 puntuacionNumber = float(puntuacion.replace(",", "."))
                 peli = Pelicula(titulo)
-                peli.set_puntuacion(puntuacionNumber)
+                peli.puntuacion = puntuacionNumber
                 listaPelis.append(peli)
-        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_puntuacion(), reverse=True)
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.puntuacion, reverse=True)
 
 
     return listaPelis
@@ -65,17 +65,17 @@ def proximosEstrenos(urlProxEstrenos,ordenarPor):
         reparto = a.select_one('.top-movie .movie-card .mc-right .mc-right-content .mc-data .cast .credits .nb a').text
 
         peli = Pelicula(titulo)
-        peli.set_fecha_lanzamiento(fechaEstreno)
-        peli.set_genero(genero)
-        peli.set_sinopsis(sinopsis)
-        peli.set_director(director)
-        peli.set_reparto(reparto)
+        peli.lanzamiento = fechaEstreno
+        peli.genero = genero
+        peli.sinopsis =sinopsis
+        peli.director = director
+        peli.reparto = reparto
 
         listaPelis.append(peli)
     if ordenarPor == 1: #Ordena segun genero
-        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_genero())
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.genero)
     else:#Ordena segun fecha
-        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_fecha_lanzamiento(),reverse=True)
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.lanzamiento,reverse=True)
 
     return listaPelis
 
@@ -95,7 +95,7 @@ def rankingPeliculas(urlRanking):
             puntuacionNumber = float(puntuacion.replace(",", "."))
 
         peli = Pelicula(titulo)
-        peli.set_puntuacion(puntuacionNumber)
+        peli.puntuacion = puntuacionNumber
 
         listaRanking.append(peli)
 
@@ -149,13 +149,13 @@ while not salir:
             if opcionJson == 1:
                 for a in listaPelisDiarias:
                     print("---------------------------------------")
-                    print(f"Titulo: {a.get_titulo()}")
-                    print(f"Puntuación: {a.get_puntuacion()}")
+                    print(f"Titulo: {a.titulo}")
+                    print(f"Puntuación: {a.puntuacion}")
                     print("---------------------------------------")
             else:
                 fichero = open("pelisDiarias.json", "a")
                 for a in listaPelisDiarias:
-                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+                    peli = { "Titulo": a.titulo,"Puntuación":a.puntuacion}
                     json.dump(peli, fichero)
                     fichero.write('\n')
                 fichero.close()
@@ -182,23 +182,23 @@ while not salir:
                 if opcionJson == 1:
                     for a in listaProxEstrenos:
                         print("---------------------------------------")
-                        print(f"Titulo: {a.get_titulo()}")
-                        print(f"Fecha: {a.get_fecha_lanzamiento()}")
-                        print(f"Genero: {a.get_genero()}")
-                        print(f"Sinopsis: {a.get_sinopsis()}")
-                        print(f"Director: {a.get_director()}")
-                        print(f"Reparto: {a.get_reparto()}")
+                        print(f"Titulo: {a.titulo}")
+                        print(f"Fecha: {a.lanzamiento}")
+                        print(f"Genero: {a.genero}")
+                        print(f"Sinopsis: {a.sinopsis}")
+                        print(f"Director: {a.director}")
+                        print(f"Reparto: {a.reparto}")
                         print("---------------------------------------")
                 else:
 
                     fichero = open("proximosEstrenos.json", "a")
                     for a in listaProxEstrenos:
-                        peli = {"Titulo": a.get_titulo(),
-                                "Fecha": a.get_fecha_lanzamiento(),
-                                "Genero":a.get_genero(),
-                                "Sinopsis": a.get_sinopsis(),
-                                "Director:":a.get_director(),
-                                "Reparto":a.get_reparto()}
+                        peli = {"Titulo": a.titulo,
+                                "Fecha": a.lanzamiento,
+                                "Genero":a.genero,
+                                "Sinopsis": a.sinopsis,
+                                "Director:":a.director,
+                                "Reparto":a.reparto}
                         json.dump(peli, fichero)
                         fichero.write('\n')
                     fichero.close()
@@ -217,13 +217,13 @@ while not salir:
             if opcionJson == 1:
                 for a in listaRanking:
                     print("---------------------------------------")
-                    print(f"Titulo: {a.get_titulo()}")
-                    print(f"Puntuación: {a.get_puntuacion()}")
+                    print(f"Titulo: {a.titulo}")
+                    print(f"Puntuación: {a.puntuacion}")
                     print("---------------------------------------")
             else:
                 fichero = open("rankingAnual.json", "a")
                 for a in listaRanking:
-                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+                    peli = { "Titulo": a.titulo,"Puntuación":a.puntuacion}
                     json.dump(peli, fichero)
                     fichero.write('\n')
                 fichero.close()
