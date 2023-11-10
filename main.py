@@ -124,10 +124,7 @@ urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
 urlRanking = "https://www.filmaffinity.com/es/ranking.php?rn=ranking_2023_topmovies"
 
 salir = False
-# listas
-listaPelisDiarias = []
-listaProxEstrenos = []
-listaRanking = []
+
 
 while not salir:
     imprimirMenu()
@@ -154,10 +151,9 @@ while not salir:
                     print("---------------------------------------")
             else:
                 fichero = open("pelisDiarias.json", "a")
-                for a in listaPelisDiarias:
-                    peli = { "Titulo": a.titulo,"Puntuación":a.puntuacion}
-                    json.dump(peli, fichero)
-                    fichero.write('\n')
+                dicPelisDiarias = {"PeliculasDIARIAS": {a.titulo: {"Titulo": a.titulo, "Puntuación": a.puntuacion} for a in
+                                                 listaPelisDiarias}}
+                json.dump(dicPelisDiarias, fichero, indent=2)
                 fichero.close()
                 print("Datos guardados en pelisDiarias.json")
 
@@ -190,17 +186,12 @@ while not salir:
                         print(f"Reparto: {a.reparto}")
                         print("---------------------------------------")
                 else:
-
                     fichero = open("proximosEstrenos.json", "a")
-                    for a in listaProxEstrenos:
-                        peli = {"Titulo": a.titulo,
-                                "Fecha": a.lanzamiento,
-                                "Genero":a.genero,
-                                "Sinopsis": a.sinopsis,
-                                "Director:":a.director,
-                                "Reparto":a.reparto}
-                        json.dump(peli, fichero)
-                        fichero.write('\n')
+                    dicProxEstrenos = {
+                        "ProximosESTRENOS": {a.titulo: {"Titulo": a.titulo, "Fecha": a.lanzamiento, "Genero": a.genero,
+                                                 "Sinopsis": a.sinopsis, "Director": a.director, "Reparto": a.reparto}
+                                      for a in listaProxEstrenos}}
+                    json.dump(dicProxEstrenos, fichero, indent=2)
                     fichero.close()
                     print("Datos guardados en proximosEstrenos.json")
         input("Pulsa una tecla para volver al menu")
@@ -222,10 +213,9 @@ while not salir:
                     print("---------------------------------------")
             else:
                 fichero = open("rankingAnual.json", "a")
-                for a in listaRanking:
-                    peli = { "Titulo": a.titulo,"Puntuación":a.puntuacion}
-                    json.dump(peli, fichero)
-                    fichero.write('\n')
+                dicRanking = {
+                    "rankingANUAL": {a.titulo: {"Titulo": a.titulo, "Puntuación": a.puntuacion} for a in listaRanking}}
+                json.dump(dicRanking, fichero, indent=2)
                 fichero.close()
                 print("Datos guardados en rankingAnual.json")
         input("Pulsa una tecla para volver al menu")
