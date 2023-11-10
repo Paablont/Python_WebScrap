@@ -5,7 +5,7 @@ from discord.ext import tasks,commands
 import PeliculasDiarias
 
 
-TOKEN = 'MTE3MjQ1Nzc4ODc5OTE4OTAwMg.GPKsym.2XTECbWcgZBzOFFPxsUPeZsrqelo1KF7gbG2vU'
+TOKEN = 'MTE3MjU0OTEwNTc4MDc5MzQ5NQ.Gh77kf._q9vDk0L7NluFJUZWBSRIuhG8qbpUc8IDucznI'
 
 
 intents = discord.Intents.default()
@@ -33,7 +33,7 @@ async def event_Film():
     urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 
     movies_result = PeliculasDiarias.peliculasDiarias(urlDiarias, fechaActual)
-    channel = bot.get_channel(int("1171870938636226592"))
+    channel = bot.get_channel(int("1172488603109167114"))
 
     try:
         if channel is not None:

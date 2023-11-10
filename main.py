@@ -26,7 +26,7 @@ def peliculasDiarias(urlDiarias, fechaActual):
     soup = bs4.BeautifulSoup(result.text, 'lxml')
     # Saco la fecha de las pelis (para despues compararla con la actual)
     fechaPelis = soup.find('div', class_='rdate-cat rdate-cat-first').text.strip()
-
+    print(fechaPelis)
     # Comprobamos fechas
     if (fechaPelis == fechaActual):
 
@@ -99,20 +99,34 @@ def rankingPeliculas(urlRanking):
         listaRanking.append(peli)
 
     return listaRanking
+
 # Menu app:
 fecha = datetime.date.today()
-fechaActual = fecha.strftime('%d de %m de %Y')
+meses_espanol = {
+    'January': 'enero',
+    'February': 'febrero',
+    'March': 'marzo',
+    'April': 'abril',
+    'May': 'mayo',
+    'June': 'junio',
+    'July': 'julio',
+    'August': 'agosto',
+    'September': 'septiembre',
+    'October': 'octubre',
+    'November': 'noviembre',
+    'December': 'diciembre'
+}
+nombre_mes = meses_espanol[fecha.strftime('%B')]
+fechaActual = fecha.strftime(f'%d de {nombre_mes} de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 urlProxEstrenos = "https://www.filmaffinity.com/es/rdcat.php?id=upc_th_es"
 urlRanking = "https://www.filmaffinity.com/es/ranking.php?rn=ranking_2023_topmovies"
 
 salir = False
-
 # listas
 listaPelisDiarias = []
 listaProxEstrenos = []
 listaRanking = []
-
 
 while not salir:
     imprimirMenu()
@@ -121,30 +135,30 @@ while not salir:
 
     if opcion == 1:
 
-        # print(f"Peliculas a {fechaActual}")
-        # listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
-        # # Si la lista esta vacia no hay pelis nuevas
-        # if not listaPelisDiarias:
-        #     print("Hoy no hay ninguna película nueva")
-        # else:
-        #     imprimirOpcionJSON()
-        #     opcionJsonString = input("Elige una opción: ")
-        #     opcionJson = int(opcionJsonString)
-        #
-        #     if opcionJson == 1:
-        #         for a in listaRanking:
-        #             print("---------------------------------------")
-        #             print(f"Titulo: {a.get_titulo()}")
-        #             print(f"Puntuación: {a.get_puntuacion()}")
-        #             print("---------------------------------------")
-        #     else:
-        #         fichero = open("pelisDiarias.json", "a")
-        #         for a in listaPelisDiarias:
-        #             peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
-        #             json.dump(peli, fichero)
-        #             fichero.write('\n')
-        #         fichero.close()
-        #         print("Datos guardados en pelisDiarias.json")
+        print(f"Peliculas a {fechaActual}")
+        listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
+        # Si la lista esta vacia no hay pelis nuevas
+        if not listaPelisDiarias:
+            print("Hoy no hay ninguna película nueva")
+        else:
+            imprimirOpcionJSON()
+            opcionJsonString = input("Elige una opción: ")
+            opcionJson = int(opcionJsonString)
+
+            if opcionJson == 1:
+                for a in listaPelisDiarias:
+                    print("---------------------------------------")
+                    print(f"Titulo: {a.get_titulo()}")
+                    print(f"Puntuación: {a.get_puntuacion()}")
+                    print("---------------------------------------")
+            else:
+                fichero = open("pelisDiarias.json", "a")
+                for a in listaPelisDiarias:
+                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+                    json.dump(peli, fichero)
+                    fichero.write('\n')
+                fichero.close()
+                print("Datos guardados en pelisDiarias.json")
 
 
         input("Pulsa una tecla para volver al menu")
@@ -190,6 +204,7 @@ while not salir:
                     print("Datos guardados en proximosEstrenos.json")
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
+
     elif opcion == 3:
         listaRanking = rankingPeliculas(urlRanking)
         if not listaRanking:
@@ -214,6 +229,7 @@ while not salir:
                 print("Datos guardados en rankingAnual.json")
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
+
     elif opcion == 4:
         print("Hasta pronto")
         sys.exit()

@@ -5,7 +5,22 @@ from Peliculas import Pelicula
 
 
 fecha = datetime.date.today()
-fechaActual = fecha.strftime('%d de %m de %Y')
+meses_espanol = {
+    'January': 'enero',
+    'February': 'febrero',
+    'March': 'marzo',
+    'April': 'abril',
+    'May': 'mayo',
+    'June': 'junio',
+    'July': 'julio',
+    'August': 'agosto',
+    'September': 'septiembre',
+    'October': 'octubre',
+    'November': 'noviembre',
+    'December': 'diciembre'
+}
+nombre_mes = meses_espanol[fecha.strftime('%B')]
+fechaActual = fecha.strftime(f'%d de {nombre_mes} de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 
 def peliculasDiarias(urlDiarias, fechaActual):
@@ -16,7 +31,7 @@ def peliculasDiarias(urlDiarias, fechaActual):
     soup = bs4.BeautifulSoup(result.text, 'lxml')
     # Saco la fecha de las pelis (para despues compararla con la actual)
     fechaPelis = soup.find('div', class_='rdate-cat rdate-cat-first').text.strip()
-
+    print(fechaPelis)
     # Comprobamos fechas
     if (fechaPelis == fechaActual):
 
