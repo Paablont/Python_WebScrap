@@ -121,30 +121,32 @@ while not salir:
 
     if opcion == 1:
 
-        print(f"Peliculas a {fechaActual}")
-        listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
-        # Si la lista esta vacia no hay pelis nuevas
-        if not listaPelisDiarias:
-            print("Hoy no hay ninguna película nueva")
-        else:
-            imprimirOpcionJSON()
-            opcionJsonString = input("Elige una opción: ")
-            opcionJson = int(opcionJsonString)
+        # print(f"Peliculas a {fechaActual}")
+        # listaPelisDiarias = peliculasDiarias(urlDiarias, fechaActual)
+        # # Si la lista esta vacia no hay pelis nuevas
+        # if not listaPelisDiarias:
+        #     print("Hoy no hay ninguna película nueva")
+        # else:
+        #     imprimirOpcionJSON()
+        #     opcionJsonString = input("Elige una opción: ")
+        #     opcionJson = int(opcionJsonString)
+        #
+        #     if opcionJson == 1:
+        #         for a in listaRanking:
+        #             print("---------------------------------------")
+        #             print(f"Titulo: {a.get_titulo()}")
+        #             print(f"Puntuación: {a.get_puntuacion()}")
+        #             print("---------------------------------------")
+        #     else:
+        #         fichero = open("pelisDiarias.json", "a")
+        #         for a in listaPelisDiarias:
+        #             peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
+        #             json.dump(peli, fichero)
+        #             fichero.write('\n')
+        #         fichero.close()
+        #         print("Datos guardados en pelisDiarias.json")
 
-            if opcionJson == 1:
-                for a in listaRanking:
-                    print("---------------------------------------")
-                    print(f"Titulo: {a.get_titulo()}")
-                    print(f"Puntuación: {a.get_puntuacion()}")
-                    print("---------------------------------------")
-            else:
-                fichero = open("pelisDiarias.json", "a")
-                for a in listaPelisDiarias:
-                    peli = { "Titulo": a.get_titulo(),"Puntuación":a.get_puntuacion()}
-                    json.dump(peli, fichero)
-                    fichero.write('\n')
-                fichero.close()
-                print("Datos guardados en pelisDiarias.json")
+
         input("Pulsa una tecla para volver al menu")
         os.system('cls')
 
