@@ -22,6 +22,7 @@ async def on_ready():
 async def saludar(ctx):
     await ctx.send(f'Hola, {ctx.author.mention}!')
 
+#prueba
 bot.run(TOKEN)
 # @tasks.loop(hours=24) # Se ejecutará cada 24 horas
 # async def event_Film():
