@@ -28,20 +28,23 @@ async def on_ready():
 
 @tasks.loop(hours=24)
 async def event_Film():
+    movies_result = []
     fecha = datetime.date.today()
     fechaActual = fecha.strftime('%d de %m de %Y')
     urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 
-    movies_result = PeliculasDiarias.peliculasDiarias(urlDiarias, fechaActual)
+    movies_result = await PeliculasDiarias.peliculasDiarias(urlDiarias, fechaActual)
     channel = bot.get_channel(int("1172488603109167114"))
 
     try:
         if channel is not None:
-            if movies_result:
-                for result in movies_result:
-                    await channel.send(embed=result.to_embed())
-            else:
+            if not movies_result:
                 await channel.send("No hay pelis hoy")
+
+            else:
+                for result in movies_result:
+                    await channel.send(str(result))
+
         else:
             print("Error: El canal no se encontró.")
     except Exception as e:

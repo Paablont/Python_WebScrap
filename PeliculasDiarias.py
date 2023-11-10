@@ -23,7 +23,7 @@ nombre_mes = meses_espanol[fecha.strftime('%B')]
 fechaActual = fecha.strftime(f'%d de {nombre_mes} de %Y')
 urlDiarias = "https://www.filmaffinity.com/es/rdcat.php?id=new_th_es"
 
-def peliculasDiarias(urlDiarias, fechaActual):
+async def peliculasDiarias(urlDiarias, fechaActual):
     # lista de pelis para despues ordenarlas
     listaPelis = []
     # Solicitud a la pagina y soup
@@ -31,7 +31,7 @@ def peliculasDiarias(urlDiarias, fechaActual):
     soup = bs4.BeautifulSoup(result.text, 'lxml')
     # Saco la fecha de las pelis (para despues compararla con la actual)
     fechaPelis = soup.find('div', class_='rdate-cat rdate-cat-first').text.strip()
-    print(fechaPelis)
+
     # Comprobamos fechas
     if (fechaPelis == fechaActual):
 
@@ -46,6 +46,7 @@ def peliculasDiarias(urlDiarias, fechaActual):
                 peli = Pelicula(titulo)
                 peli.set_puntuacion(puntuacionNumber)
                 listaPelis.append(peli)
-        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_puntuacion())
+        listaPelis = sorted(listaPelis, key=lambda pelicula: pelicula.get_puntuacion(), reverse=True)
+
 
     return listaPelis

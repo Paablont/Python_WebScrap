@@ -7,6 +7,14 @@ class Pelicula:
         self._director = None
         self._reparto = None
 
+    def __str__(self):
+        return f"Título: {self._titulo}\n" \
+               f"Fecha de lanzamiento: {self._fecha_lanzamiento}\n" \
+               f"Género: {self._genero}\n" \
+               f"Sinopsis: {self._sinopsis}\n" \
+               f"Director: {self._director}\n" \
+               f"Reparto: {self._reparto}\n" \
+               f"Puntuación: {self._puntuacion}"
 
 
     # Getters
